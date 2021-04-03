@@ -1,0 +1,11 @@
+[package]
+name = "utils"
+version = "0.1.0"
+authors = ["Jeroen van den Hout <jlvandenhout@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+iota-streams = { git = "https://github.com/iotaledger/streams", rev = "9988f68", features = ["std", "async", "tangle"] }
+rand = "0.8.3"
+iota-crypto = { git = "https://github.com/iotaledger/crypto.rs", branch = "dev", features = ["blake2b"]}
+hex = { version = "0.4.2", default-features = false, optional = false }
