@@ -31,7 +31,7 @@ async fn main() {
         .send_signed_packet(&announcement, &public_payload, &masked_payload)
         .await
         .unwrap();
-    println!("Message Index: {}", utils::get_hash(&packet.0).unwrap());
+    println!("Message Index: {}", utils::get_hash(&packet.0));
 
     let keyload = author.send_keyload_for_everyone(&announcement).await.unwrap();
 
@@ -41,5 +41,5 @@ async fn main() {
         .send_signed_packet(&keyload.0, &public_payload, &masked_payload)
         .await
         .unwrap();
-    println!("Message Index: {}", utils::get_hash(&packet.0).unwrap());
+    println!("Message Index: {}", utils::get_hash(&packet.0));
 }

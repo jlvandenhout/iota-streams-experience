@@ -1,8 +1,5 @@
 use crypto::hashes::{Digest, blake2b};
-use iota_streams::{
-    app_channels::api::tangle::Address,
-    core::Result,
-};
+use iota_streams::app_channels::api::tangle::Address;
 use rand::{
     distributions::Uniform,
     Rng,
@@ -20,8 +17,8 @@ pub fn random_seed() -> String {
 }
 
 
-pub fn get_hash(link: &Address) ->  Result<String>  {
+pub fn get_hash(link: &Address) ->  String {
     let total = [link.appinst.as_ref(), link.msgid.as_ref()].concat();
     let hash = blake2b::Blake2b256::digest(&total);
-    Ok(hex::encode(&hash))
+    hex::encode(&hash)
 }
