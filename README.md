@@ -9,7 +9,9 @@ The repository is structured as a Rust workspace revolving around the examples. 
 In case of significant code duplication between examples, functionality may be factored out into the utils package.
 
 ## Usage
-To run one of the examples in the examples folder from the root of the repository, use:
+To run one of the examples in the examples folder from the root of this repository, use:
 ```
 cargo run --package <EXAMPLE> [-- <OPTIONAL ARGUMENTS>]
 ```
+
+Any of the examples should also be able to run from their respective roots.
