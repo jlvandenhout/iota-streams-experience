@@ -349,7 +349,7 @@ In this step, we will create the Subscriber binary that uses the functions we ju
     ```
 
 
-We now have an Author and a Subscriber we can create and consume our notification service. From the root of this crate use the following commands to run the Author and the Subscriber:
+We now have an Author and a Subscriber to create and consume our notification service. From the root of this crate use the following commands to run the Author and the Subscriber:
 
 ```bash
 cargo run --bin author <SEED>
