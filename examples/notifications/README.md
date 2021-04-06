@@ -22,7 +22,7 @@ The best way to start a new project is to use the [Cargo](https://doc.rust-lang.
 
 In this step, we use Cargo to create a new project and list the dependencies. We will create a library project as a base for our Author and Subscriber binaries, which we will create later.
 
-1. Use Cargo to create a new library project. You can replace `notifications` with your own project name if we want.
+1. Use Cargo to create a new library project. You can replace `notifications` with your own project name if you want.
 
     ```bash
     cargo new --lib notifications
