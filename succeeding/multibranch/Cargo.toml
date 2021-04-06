@@ -1,0 +1,10 @@
+[package]
+name = "multibranch"
+version = "0.1.0"
+authors = ["Jeroen van den Hout <jlvandenhout@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+iota-streams = { git = "https://github.com/iotaledger/streams", rev = "9988f68", features = ["std", "async", "tangle"] }
+tokio = { version = "1.1", features = ["full"] }
+utils = { path = "../../utils" }
