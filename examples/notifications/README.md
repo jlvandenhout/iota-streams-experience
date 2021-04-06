@@ -39,7 +39,7 @@ In this step, we use Cargo to create a new project and list the dependencies. We
 
     The `tokio` crate is needed here, because some parts of the Streams crate are asynchronous and need a runtime. This crate provides that runtime.
 
-3. In the `lib.rs` list all the functionality we will be using in the following steps.
+3. In `lib.rs` list all the functionality we will be using in the following steps.
 
     ```rust
     use iota_streams::app_channels::api::tangle::{
