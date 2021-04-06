@@ -280,7 +280,7 @@ In this step, we write a function that receives a notification from the Channel.
         }
     ```
 
-    Note that we are only interested int the Signed Packet Messages for now. There are other Message types we could listen to, like Keyload Messages.
+    Note that we are only interested int the Signed Packet messages for now. There are other messages types we could listen to, like Keyload messages.
 
 
 ## Step 7. Create the Subscriber
