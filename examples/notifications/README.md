@@ -194,8 +194,10 @@ In this step, we will create the Author binary that uses the functions we just c
 5. Now we are ready to announce the Channel and send a notification using our library functions.
 
     ```rust
+        // Announce the Channel and get the Channel Address and Announcement Message ID
         let (application_instance, announcement_id) = notifications::announce(&mut author);
 
+        // Send the notification
         let notification = "NOTIFICATION".to_string();
         notifications::send(&mut author, &application_instance, &announcement_id, &notification);
     ```
@@ -203,6 +205,7 @@ In this step, we will create the Author binary that uses the functions we just c
 6. For our convenience, let's print the command to run the Subscriber to the console:
 
     ```rust
+        // Share the Channel Address and Announcement Message ID with the Subscriber
         println!("Now use the Subscriber to subscribe to the Channel and receive the notification, by running:");
         println!("cargo run --bin subscriber <SEED> {} {}", application_instance, announcement_id);
     ```

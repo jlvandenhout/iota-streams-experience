@@ -20,11 +20,14 @@ async fn main() {
     let multi_branching = true;
     let mut author = Author::new(seed, encoding, PAYLOAD_BYTES, multi_branching, client);
 
+    // Announce the Channel and get the Channel Address and Announcement Message ID
     let (application_instance, announcement_id) = notifications::announce(&mut author);
 
+    // Send the notification
     let notification = "NOTIFICATION".to_string();
     notifications::send(&mut author, &application_instance, &announcement_id, &notification);
 
+    // Share the Channel Address and Announcement Message ID with the Subscriber
     println!("Now use the Subscriber to subscribe to the Channel and receive the notification, by running:");
     println!("cargo run --bin subscriber <SEED> {} {}", application_instance, announcement_id);
 }
