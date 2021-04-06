@@ -33,8 +33,8 @@ In this step, we use Cargo to create a new project and list the dependencies. We
 2. Open the `Cargo.toml` file, and add the following dependencies under the `[dependencies]` section
 
     ```bash
-    iota-streams = { git = "https://github.com/iotaledger/streams", branch  = "chrysalis-2", features = ["std", "tangle"]}
-    tokio = {version = "1.1"}
+    iota-streams = { git = "https://github.com/iotaledger/streams", branch  = "chrysalis-2", features = ["std", "tangle"] }
+    tokio = { version = "1.1" }
     ```
 
     The `tokio` crate is needed here, because some parts of the Streams crate are asynchronous and need a runtime. This crate provides that runtime.
