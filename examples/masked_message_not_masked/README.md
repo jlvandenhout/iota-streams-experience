@@ -1,4 +1,4 @@
-# Duplicate announce messages
+# Masked message not masked
 ## Issue
 When an author sends masked messages, they are not encrypted.
 
