@@ -5,7 +5,7 @@ authors = ["Jeroen van den Hout <jlvandenhout@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-iota-streams = { git = "https://github.com/iotaledger/streams", rev = "9988f68", features = ["std", "async", "tangle"] }
+iota-streams = { git = "https://github.com/iotaledger/streams", branch = "chrysalis-2", features = ["std", "tangle"] }
 rand = "0.8.3"
 iota-crypto = { git = "https://github.com/iotaledger/crypto.rs", branch = "dev", features = ["blake2b"]}
 hex = { version = "0.4.2", default-features = false, optional = false }

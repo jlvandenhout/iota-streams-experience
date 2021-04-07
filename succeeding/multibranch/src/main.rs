@@ -41,49 +41,49 @@ async fn main() {
         Client::new_from_url("https://api.lb-0.testnet.chrysalis2.com"),
     );
 
-    let announcement = author.send_announce().await.unwrap();
-    subscriber.receive_announcement(&announcement).await.unwrap();
-    non_subscriber.receive_announcement(&announcement).await.unwrap();
+    let announcement = author.send_announce().unwrap();
+    subscriber.receive_announcement(&announcement).unwrap();
+    non_subscriber.receive_announcement(&announcement).unwrap();
 
-    let subscription = subscriber.send_subscribe(&announcement).await.unwrap();
-    author.receive_subscribe(&subscription).await.unwrap();
+    let subscription = subscriber.send_subscribe(&announcement).unwrap();
+    author.receive_subscribe(&subscription).unwrap();
 
     let public_payload = Bytes("PUBLIC 1".as_bytes().to_vec());
     let masked_payload = Bytes("PUBLIC 1".as_bytes().to_vec());
     let public = author
         .send_signed_packet(&announcement, &public_payload, &masked_payload)
-        .await
+
         .unwrap();
 
     let public_payload = Bytes("PUBLIC 2".as_bytes().to_vec());
     let masked_payload = Bytes("PUBLIC 2".as_bytes().to_vec());
     author
         .send_signed_packet(&public.0, &public_payload, &masked_payload)
-        .await
+
         .unwrap();
 
     let keyload = author
         .send_keyload_for_everyone(&announcement)
-        .await
+
         .unwrap();
 
     let public_payload = Bytes("PRIVATE 1".as_bytes().to_vec());
     let masked_payload = Bytes("PRIVATE 1".as_bytes().to_vec());
     let private = author
         .send_signed_packet(&keyload.0, &public_payload, &masked_payload)
-        .await
+
         .unwrap();
 
     let public_payload = Bytes("PRIVATE 2".as_bytes().to_vec());
     let masked_payload = Bytes("PRIVATE 2".as_bytes().to_vec());
     author
         .send_signed_packet(&private.0, &public_payload, &masked_payload)
-        .await
+
         .unwrap();
 
 
     loop {
-        let messages = subscriber.fetch_next_msgs().await;
+        let messages = subscriber.fetch_next_msgs();
         if messages.is_empty() {
             println!("Subscriber: No more messages...");
             break;
@@ -108,7 +108,7 @@ async fn main() {
 
 
     loop {
-        let messages = non_subscriber.fetch_next_msgs().await;
+        let messages = non_subscriber.fetch_next_msgs();
         if messages.is_empty() {
             println!("Non Subscriber: No more messages...");
             break;
