@@ -41,30 +41,30 @@ async fn main() {
         Client::new_from_url("https://api.lb-0.testnet.chrysalis2.com"),
     );
 
-    let announcement = author.send_announce().unwrap();
-    subscriber_before_keyload.receive_announcement(&announcement).unwrap();
-    subscriber_after_keyload.receive_announcement(&announcement).unwrap();
+    let announcement = author.send_announce().await.unwrap();
+    subscriber_before_keyload.receive_announcement(&announcement).await.unwrap();
+    subscriber_after_keyload.receive_announcement(&announcement).await.unwrap();
 
-    let subscription = subscriber_before_keyload.send_subscribe(&announcement).unwrap();
-    author.receive_subscribe(&subscription).unwrap();
+    let subscription = subscriber_before_keyload.send_subscribe(&announcement).await.unwrap();
+    author.receive_subscribe(&subscription).await.unwrap();
 
     let public_payload = Bytes("PUBLIC MESSAGE".as_bytes().to_vec());
     let masked_payload = Bytes("MASKED MESSAGE".as_bytes().to_vec());
     let packet = author
         .send_signed_packet(&announcement, &public_payload, &masked_payload)
-        .unwrap();
+        .await.unwrap();
     println!("Message Index: {}", utils::get_hash(&packet.0));
 
-    let keyload = author.send_keyload_for_everyone(&packet.0).unwrap();
+    let keyload = author.send_keyload_for_everyone(&packet.0).await.unwrap();
 
-    let subscription = subscriber_after_keyload.send_subscribe(&announcement).unwrap();
-    author.receive_subscribe(&subscription).unwrap();
+    let subscription = subscriber_after_keyload.send_subscribe(&announcement).await.unwrap();
+    author.receive_subscribe(&subscription).await.unwrap();
 
     let public_payload = Bytes("PUBLIC MESSAGE".as_bytes().to_vec());
     let masked_payload = Bytes("MASKED MESSAGE".as_bytes().to_vec());
     let packet = author
         .send_signed_packet(&keyload.0, &public_payload, &masked_payload)
-        .unwrap();
+        .await.unwrap();
     println!("Message Index: {}", utils::get_hash(&packet.0));
 
 

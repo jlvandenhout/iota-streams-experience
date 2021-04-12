@@ -31,10 +31,10 @@ async fn main() {
         Client::new_from_url("https://api.lb-0.testnet.chrysalis2.com"),
     );
 
-    let announcement = author.send_announce().unwrap();
+    let announcement = author.send_announce().await.unwrap();
     println!("Message Index: {}", utils::get_hash(&announcement));
 
-    author.send_announce().unwrap();
+    author.send_announce().await.unwrap();
 
-    subscriber.receive_announcement(&announcement).unwrap();
+    subscriber.receive_announcement(&announcement).await.unwrap();
 }

@@ -61,8 +61,7 @@ async fn main() {
 
     let keyload = author
         .send_keyload_for_everyone(&announcement)
-        .await
-        .unwrap();
+        .await.unwrap();
 
     // Subscribe after the Keyload
     let late_subscription = late_subscriber.send_subscribe(&announcement).await.unwrap();
@@ -74,34 +73,30 @@ async fn main() {
     let masked_payload = Bytes("PRIVATE 1".as_bytes().to_vec());
     let private = author
         .send_signed_packet(&keyload.0, &public_payload, &masked_payload)
-        .await
-        .unwrap();
+        .await.unwrap();
 
     let public_payload = Bytes("PRIVATE 2".as_bytes().to_vec());
     let masked_payload = Bytes("PRIVATE 2".as_bytes().to_vec());
     author
         .send_signed_packet(&private.0, &public_payload, &masked_payload)
-        .await
-        .unwrap();
+        .await.unwrap();
 
     // Send messages chained to the Announcement
     let public_payload = Bytes("PUBLIC 1".as_bytes().to_vec());
     let masked_payload = Bytes("PUBLIC 1".as_bytes().to_vec());
     let public = author
         .send_signed_packet(&announcement, &public_payload, &masked_payload)
-        .await
-        .unwrap();
+        .await.unwrap();
 
     let public_payload = Bytes("PUBLIC 2".as_bytes().to_vec());
     let masked_payload = Bytes("PUBLIC 2".as_bytes().to_vec());
     author
         .send_signed_packet(&public.0, &public_payload, &masked_payload)
-        .await
-        .unwrap();
+        .await.unwrap();
 
 
     loop {
-        let messages = non_subscriber.fetch_next_msgs().await.await;
+        let messages = non_subscriber.fetch_next_msgs().await;
         if messages.is_empty() {
             println!("Non Subscriber: No more messages...");
             break;
@@ -126,7 +121,7 @@ async fn main() {
 
 
     loop {
-        let messages = subscriber.fetch_next_msgs().await.await;
+        let messages = subscriber.fetch_next_msgs().await;
         if messages.is_empty() {
             println!("Subscriber: No more messages...");
             break;
@@ -151,7 +146,7 @@ async fn main() {
 
 
     loop {
-        let messages = late_subscriber.fetch_next_msgs().await.await;
+        let messages = late_subscriber.fetch_next_msgs().await;
         if messages.is_empty() {
             println!("Late Subscriber: No more messages...");
             break;
