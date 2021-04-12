@@ -52,7 +52,6 @@ async fn main() {
     let masked_payload = Bytes("MASKED MESSAGE".as_bytes().to_vec());
     let packet = author
         .send_signed_packet(&announcement, &public_payload, &masked_payload)
-
         .unwrap();
     println!("Message Index: {}", utils::get_hash(&packet.0));
 
@@ -65,7 +64,6 @@ async fn main() {
     let masked_payload = Bytes("MASKED MESSAGE".as_bytes().to_vec());
     let packet = author
         .send_signed_packet(&keyload.0, &public_payload, &masked_payload)
-
         .unwrap();
     println!("Message Index: {}", utils::get_hash(&packet.0));
 
