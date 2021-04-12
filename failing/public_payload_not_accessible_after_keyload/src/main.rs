@@ -69,7 +69,7 @@ async fn main() {
 
 
     loop {
-        let messages = subscriber_before_keyload.fetch_next_msgs();
+        let messages = subscriber_before_keyload.fetch_next_msgs().await;
         if messages.is_empty() {
             println!("subscriber_before_keyload: No more messages...");
             break;
@@ -93,7 +93,7 @@ async fn main() {
     }
 
     loop {
-        let messages = subscriber_after_keyload.fetch_next_msgs();
+        let messages = subscriber_after_keyload.fetch_next_msgs().await;
         if messages.is_empty() {
             println!("subscriber_after_keyload: No more messages...");
             break;

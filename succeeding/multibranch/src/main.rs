@@ -101,7 +101,7 @@ async fn main() {
 
 
     loop {
-        let messages = non_subscriber.fetch_next_msgs().await;
+        let messages = non_subscriber.fetch_next_msgs().await.await;
         if messages.is_empty() {
             println!("Non Subscriber: No more messages...");
             break;
@@ -126,7 +126,7 @@ async fn main() {
 
 
     loop {
-        let messages = subscriber.fetch_next_msgs().await;
+        let messages = subscriber.fetch_next_msgs().await.await;
         if messages.is_empty() {
             println!("Subscriber: No more messages...");
             break;
@@ -151,7 +151,7 @@ async fn main() {
 
 
     loop {
-        let messages = late_subscriber.fetch_next_msgs().await;
+        let messages = late_subscriber.fetch_next_msgs().await.await;
         if messages.is_empty() {
             println!("Late Subscriber: No more messages...");
             break;
