@@ -21,11 +21,11 @@ async fn main() {
     let mut author = Author::new(seed, encoding, PAYLOAD_BYTES, multi_branching, client);
 
     // Announce the Channel and get the Channel Address and Announcement Message ID
-    let (application_instance, announcement_id) = notifications::announce(&mut author);
+    let (application_instance, announcement_id) = notifications::announce(&mut author).await;
 
     // Send the notification
     let notification = "NOTIFICATION".to_string();
-    notifications::send(&mut author, &application_instance, &announcement_id, &notification);
+    notifications::send(&mut author, &application_instance, &announcement_id, &notification).await;
 
     // Share the Channel Address and Announcement Message ID with the Subscriber
     println!("Now use the Subscriber to subscribe to the Channel and receive the notification, by running:");

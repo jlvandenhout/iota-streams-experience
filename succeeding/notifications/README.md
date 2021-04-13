@@ -33,11 +33,13 @@ In this step, we use Cargo to create a new project and list the dependencies. We
 2. Open the `Cargo.toml` file, and add the following dependencies under the `[dependencies]` section
 
     ```bash
-    iota-streams = { git = "https://github.com/iotaledger/streams", branch  = "chrysalis-2", branch = "chrysalis-2", features = ["std", "tangle"] }
+    iota-streams = { git = "https://github.com/iotaledger/streams", branch  = "chrysalis-2", branch = "chrysalis-2", features = ["std", "async", "tangle"] }
     tokio = { version = "1.1" }
     ```
 
-    The `tokio` crate is needed here, because some parts of the Streams crate are asynchronous and need a runtime. This crate provides that runtime.
+    As Streams is inherently asynchronous, it is a lot easier to start using asynchronous features right from the start, so we can await message handling instead of using cumbersome loops to poll if a message is hanled. This means we will use `async fn` in our function definitions and `.await` when we call them to await the result.
+
+    This also means we will use the `tokio` package to provide us with an asynchronous environment.
 
 3. In `lib.rs` list all the functionality we will be using in the following steps.
 
@@ -69,7 +71,7 @@ In this step, we write a function that announces a new Channel, which Subscriber
     ```rust
     /// Announce the Channel and return the Application Instance and Message ID to
     /// share with Subscribers, so they can subscribe to the Channel.
-    pub fn announce<T: Transport>(author: &mut Author<T>) -> (String, String) {
+    pub async fn announce<T: Transport>(author: &mut Author<T>) -> (String, String) {
 
     }
     ```
@@ -79,6 +81,7 @@ In this step, we write a function that announces a new Channel, which Subscriber
     ```rust
         let announcement_link = author
             .send_announce()
+            .await
             .expect("Failed to announce the Channel");
 
         println!("Announced the Channel");
@@ -101,7 +104,7 @@ In this step, we write a function that sends a notification to the Channel. The 
     ```rust
     /// Send a notification to the Channel. This notification message is linked to
     /// the announcement message, so Subscribers are able to find it.
-    pub fn send<T: Transport>(
+    pub async fn send<T: Transport>(
         author: &mut Author<T>,
         application_instance: &String,
         announcement_id: &String,
@@ -132,6 +135,7 @@ In this step, we write a function that sends a notification to the Channel. The 
     ```rust
         author
             .send_signed_packet(&announcement_link, &public_payload, &masked_payload)
+            .await
             .expect("Failed to send the notification to the Channel");
 
         println!("Sent the notification to the Channel");
@@ -195,11 +199,11 @@ In this step, we will create the Author binary that uses the functions we just c
 
     ```rust
         // Announce the Channel and get the Channel Address and Announcement Message ID
-        let (application_instance, announcement_id) = notifications::announce(&mut author);
+        let (application_instance, announcement_id) = notifications::announce(&mut author).await;
 
         // Send the notification
         let notification = "NOTIFICATION".to_string();
-        notifications::send(&mut author, &application_instance, &announcement_id, &notification);
+        notifications::send(&mut author, &application_instance, &announcement_id, &notification).await;
     ```
 
 6. For our convenience, let's print the command to run the Subscriber to the console:
@@ -221,7 +225,7 @@ In this step, we write a function that subscribes the Subscriber to the Channel,
     ```rust
     /// Subscribe to a Channel using the Application Instance and Message ID
     /// shared by the Author.
-    pub fn subscribe<T: Transport>(
+    pub async fn subscribe<T: Transport>(
         subscriber: &mut Subscriber<T>,
         application_instance: &String,
         announcement_id: &String,
@@ -242,6 +246,7 @@ In this step, we write a function that subscribes the Subscriber to the Channel,
     ```rust
         subscriber
             .receive_announcement(&announcement_link)
+            .await
             .expect("Failed to subscribe to the Channel");
 
         println!("Subscribed to the Channel");
@@ -255,7 +260,7 @@ In this step, we write a function that receives a notification from the Channel.
 
     ```rust
     /// Receive any notifications sent by the Author to the Channel.
-    pub fn receive<T: Transport>(subscriber: &mut Subscriber<T>) {
+    pub async fn receive<T: Transport>(subscriber: &mut Subscriber<T>) {
 
     }
     ```
@@ -263,7 +268,7 @@ In this step, we write a function that receives a notification from the Channel.
 2. Fetch any messages pending for our Subscriber.
 
     ```rust
-        let messages = subscriber.fetch_next_msgs();
+        let messages = subscriber.fetch_next_msgs().await;
     ```
 
 3. Check if any messages are received and, if so, convert the public payload to plain text and print.
@@ -345,14 +350,14 @@ In this step, we will create the Subscriber binary that uses the functions we ju
 
     ```rust
         // Subscribe to the Channel using the Channel Address and Announcement Message ID
-        notifications::subscribe(&mut subscriber, application_instance, announcement_id);
+        notifications::subscribe(&mut subscriber, application_instance, announcement_id).await;
 
         // Receive notifications from the Channel
-        notifications::receive(&mut subscriber);
+        notifications::receive(&mut subscriber).await;
     ```
 
 
-We now have an Author and a Subscriber to create and consume our notification service. From the root of this crate use the following commands to run the Author and the Subscriber:
+We now have an Author and a Subscriber to create and consume our notification service. From the root of this package use the following commands to run the Author and the Subscriber:
 
 ```bash
 cargo run --bin author <SEED>

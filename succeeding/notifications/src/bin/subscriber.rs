@@ -22,8 +22,8 @@ async fn main() {
     let mut subscriber = Subscriber::new(seed, encoding, PAYLOAD_BYTES, client);
 
     // Subscribe to the Channel using the Channel Address and Announcement Message ID
-    notifications::subscribe(&mut subscriber, application_instance, announcement_id);
+    notifications::subscribe(&mut subscriber, application_instance, announcement_id).await;
 
     // Receive notifications from the Channel
-    notifications::receive(&mut subscriber);
+    notifications::receive(&mut subscriber).await;
 }
