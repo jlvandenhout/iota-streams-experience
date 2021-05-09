@@ -1,5 +1,5 @@
 # Notifications
-**This tutorial guides us through the process of building a notification service to notify Recipients using the Streams Channels protocol and the Tangle. At the end of the tutorial we will have an Author, capable of announcing a Channel and sending notifications, and a Recipient, capable of subscribing to a Channel and receiving notifications.**
+**This tutorial guides us through the process of building a notification service to notify Recipients using the Streams Channels protocol and the Tangle. At the end of the tutorial we will have an Author, capable of announcing a Channel and sending notifications, and a Recipient, capable of listening to a Channel and receiving notifications.**
 
 >This tutorial is based on the [original Channel tutorial](https://docs.iota.org/docs/channels/1.3/tutorials/build-a-messaging-app), but tailored to Streams 1.0 and IOTA 1.5 (Chrysalis) and providing a solution to some issues the community had using this tutorial.
 
