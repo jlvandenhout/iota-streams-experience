@@ -39,7 +39,7 @@ In this step, we use Cargo to create a new project and list the dependencies. We
 
     As Streams is inherently asynchronous, it is a lot easier to start using asynchronous features right from the start, so we can await message handling instead of using cumbersome loops to poll if a message is hanled. This means we will use `async fn` in our function definitions and `.await` when we call them to await the result.
 
-    Although Rust comes with asynchronous functionality, it does not provide a asynchronous runtime by default. This means we will use the `tokio` package to provide us with a runtime.
+    Although Rust comes with asynchronous functionality, it does not provide an asynchronous runtime by default. This means we will use the `tokio` package to provide us with a runtime.
 
 3. In `lib.rs` list all the functionality we will be using in the following steps.
 
@@ -218,7 +218,7 @@ Now that the Author has announced the Channel, shared the Link details and sent 
 
 
 ## Step 5. Listen to the Channel
-In this step, we write a function that listens the Recipient to the Channel, using the Application Instance and Message ID.
+In this step, we write a function that lets the Recipient listen to the Channel, using the Application Instance and Message ID.
 
 1. In the `lib.rs` file, create a function called `listen`.
 
