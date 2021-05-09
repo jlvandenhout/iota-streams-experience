@@ -9,7 +9,7 @@ use iota_streams::app_channels::api::tangle::{
 
 
 /// Announce the Channel and return the Application Instance and Message ID to
-/// share with Subscribers, so they can subscribe to the Channel.
+/// share with Recipients, so they can listen to the Channel.
 pub async fn announce<T: Transport>(author: &mut Author<T>) -> (String, String) {
     let announcement_link = author
         .send_announce()
@@ -22,7 +22,7 @@ pub async fn announce<T: Transport>(author: &mut Author<T>) -> (String, String) 
 
 
 /// Send a notification to the Channel. This notification message is linked to
-/// the announcement message, so Subscribers are able to find it.
+/// the announcement message, so Recipients are able to find it.
 pub async fn send<T: Transport>(
     author: &mut Author<T>,
     application_instance: &String,
@@ -43,28 +43,28 @@ pub async fn send<T: Transport>(
 }
 
 
-/// Subscribe to a Channel using the Application Instance and Message ID
+/// Listen to a Channel using the Application Instance and Message ID
 /// shared by the Author.
-pub async fn subscribe<T: Transport>(
-    subscriber: &mut Subscriber<T>,
+pub async fn listen<T: Transport>(
+    recipient: &mut Subscriber<T>,
     application_instance: &String,
     announcement_id: &String,
 ) {
     let announcement_link = Address::from_str(&application_instance,&announcement_id)
         .expect("Failed to create the Announcement Link");
 
-    subscriber
+    recipient
         .receive_announcement(&announcement_link)
         .await
-        .expect("Failed to subscribe to the Channel");
+        .expect("Failed to listen to the Channel");
 
-    println!("Subscribed to the Channel");
+    println!("Listening to the Channel");
 }
 
 
 /// Receive any notifications sent by the Author to the Channel.
-pub async fn receive<T: Transport>(subscriber: &mut Subscriber<T>) {
-    let messages = subscriber.fetch_next_msgs().await;
+pub async fn receive<T: Transport>(recipient: &mut Subscriber<T>) {
+    let messages = recipient.fetch_next_msgs().await;
 
     if messages.is_empty() {
         println!("No notifications");

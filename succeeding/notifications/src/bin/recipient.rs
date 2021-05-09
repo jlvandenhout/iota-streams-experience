@@ -17,13 +17,13 @@ async fn main() {
     // Connect to an IOTA Node
     let client = Client::new_from_url("https://api.lb-0.testnet.chrysalis2.com");
 
-    // Create the Subscriber
+    // Create the Recipient
     let encoding = "utf-8";
-    let mut subscriber = Subscriber::new(seed, encoding, PAYLOAD_BYTES, client);
+    let mut recipient = Subscriber::new(seed, encoding, PAYLOAD_BYTES, client);
 
-    // Subscribe to the Channel using the Channel Address and Announcement Message ID
-    notifications::subscribe(&mut subscriber, application_instance, announcement_id).await;
+    // Listen to the Channel using the Channel Address and Announcement Message ID
+    notifications::listen(&mut recipient, application_instance, announcement_id).await;
 
     // Receive notifications from the Channel
-    notifications::receive(&mut subscriber).await;
+    notifications::receive(&mut recipient).await;
 }

@@ -27,7 +27,7 @@ async fn main() {
     let notification = "NOTIFICATION".to_string();
     notifications::send(&mut author, &application_instance, &announcement_id, &notification).await;
 
-    // Share the Channel Address and Announcement Message ID with the Subscriber
-    println!("Now use the Subscriber to subscribe to the Channel and receive the notification, by running:");
-    println!("cargo run --bin subscriber <SEED> {} {}", application_instance, announcement_id);
+    // Share the Channel Address and Announcement Message ID with the Recipient
+    println!("Now use the Recipient to listen to the Channel and receive the notification, by running:");
+    println!("cargo run --bin recipient <SEED> {} {}", application_instance, announcement_id);
 }
