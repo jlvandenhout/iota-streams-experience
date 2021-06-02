@@ -23,11 +23,11 @@ async fn main() {
     // Announce the Channel and get the Channel Address and Announcement Message ID
     let (application_instance, announcement_id) = notifications::announce(&mut author).await;
 
+    // Share the Channel Address and Announcement Message ID with the Recipient
+    println!("Now open another terminal and run:");
+    println!("cargo run --bin recipient {} {} <RANDOM_SEED>", application_instance, announcement_id);
+
     // Send the notification
     let notification = "NOTIFICATION".to_string();
     notifications::send(&mut author, &application_instance, &announcement_id, &notification).await;
-
-    // Share the Channel Address and Announcement Message ID with the Recipient
-    println!("Now use the Recipient to listen to the Channel and receive the notification, by running:");
-    println!("cargo run --bin recipient {} {} <SEED>", application_instance, announcement_id);
 }
