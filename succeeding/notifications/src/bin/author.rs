@@ -23,11 +23,11 @@ async fn main() {
     let mut author = Author::new(seed, encoding, PAYLOAD_BYTES, multi_branching, client);
 
     // Announce the Channel and get the Channel Address and Announcement Message ID
-    let (application_instance, announcement_id) = notifications::announce(&mut author).await;
+    let (application_instance, mut message_id) = notifications::announce(&mut author).await;
 
     // Share the Channel Address and Announcement Message ID with the Recipient
     println!("Now open another terminal and run:");
-    println!("cargo run --bin recipient {} {} <RANDOM_SEED>", application_instance, announcement_id);
+    println!("cargo run --bin recipient {} {} <RANDOM_SEED>", application_instance, message_id);
     println!("Send a notification:");
 
     // Send notifications
@@ -36,7 +36,7 @@ async fn main() {
         let notification = line.expect("Unable to read notification");
 
         println!("Sending the notification");
-        notifications::send(&mut author, &application_instance, &announcement_id, &notification).await;
+        message_id = notifications::send(&mut author, &application_instance, &message_id, &notification).await;
         println!("Send another notification:");
     }
 }
