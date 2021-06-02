@@ -1,3 +1,5 @@
+use std::io::BufRead;
+
 use iota_streams::{
     app::transport::tangle::{
         PAYLOAD_BYTES,
@@ -26,8 +28,13 @@ async fn main() {
     // Share the Channel Address and Announcement Message ID with the Recipient
     println!("Now open another terminal and run:");
     println!("cargo run --bin recipient {} {} <RANDOM_SEED>", application_instance, announcement_id);
+    println!("Send a notification:");
 
-    // Send the notification
-    let notification = "NOTIFICATION".to_string();
-    notifications::send(&mut author, &application_instance, &announcement_id, &notification).await;
+    // Send notifications
+    let input = std::io::stdin();
+    for line in input.lock().lines() {
+        let notification = line.expect("Unable to read notification");
+        notifications::send(&mut author, &application_instance, &announcement_id, &notification).await;
+        println!("Send a notification:");
+    }
 }
