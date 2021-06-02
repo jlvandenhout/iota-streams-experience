@@ -19,7 +19,7 @@ async fn main() {
 
     // Create the Author
     let encoding = "utf-8";
-    let multi_branching = true;
+    let multi_branching = false;
     let mut author = Author::new(seed, encoding, PAYLOAD_BYTES, multi_branching, client);
 
     // Announce the Channel and get the Channel Address and Announcement Message ID
