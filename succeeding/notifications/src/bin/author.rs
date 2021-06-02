@@ -29,5 +29,5 @@ async fn main() {
 
     // Share the Channel Address and Announcement Message ID with the Recipient
     println!("Now use the Recipient to listen to the Channel and receive the notification, by running:");
-    println!("cargo run --bin recipient <SEED> {} {}", application_instance, announcement_id);
+    println!("cargo run --bin recipient {} {} <SEED>", application_instance, announcement_id);
 }

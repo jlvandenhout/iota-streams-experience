@@ -10,9 +10,9 @@ use iota_streams::{
 async fn main() {
     // Get the Seed, Channel Address and Announcement Message ID from the command line
     let args : Vec<String> = std::env::args().collect();
-    let seed = args[1].as_str();
-    let application_instance = &args[2];
-    let announcement_id = &args[3];
+    let application_instance = &args[1];
+    let announcement_id = &args[2];
+    let seed = &args[3];
 
     // Connect to an IOTA Node
     let client = Client::new_from_url("https://api.lb-0.testnet.chrysalis2.com");
