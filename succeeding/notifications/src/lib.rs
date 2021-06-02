@@ -26,20 +26,21 @@ pub async fn announce<T: Transport>(author: &mut Author<T>) -> (String, String) 
 pub async fn send<T: Transport>(
     author: &mut Author<T>,
     application_instance: &String,
-    announcement_id: &String,
+    message_id: &String,
     notification: &String,
-) {
-    let announcement_link = Address::from_str(&application_instance,&announcement_id)
+) -> String {
+    let link = Address::from_str(application_instance,message_id)
         .expect("Failed to create the Announcement Link");
 
     let public_payload = Bytes(notification.as_bytes().to_vec());
     let masked_payload = Bytes("".as_bytes().to_vec());
-    author
-        .send_signed_packet(&announcement_link, &public_payload, &masked_payload)
+    let (notification_link, _) = author
+        .send_signed_packet(&link, &public_payload, &masked_payload)
         .await
         .expect("Failed to send the notification to the Channel");
 
     println!("Sent the notification to the Channel");
+    notification_link.msgid.to_string()
 }
 
 
@@ -64,18 +65,12 @@ pub async fn listen<T: Transport>(
 
 /// Receive any notifications sent by the Author to the Channel.
 pub async fn receive<T: Transport>(recipient: &mut Subscriber<T>) {
-    let messages = recipient.fetch_next_msgs().await;
-
-    if messages.is_empty() {
-        println!("No notifications");
-    } else {
-        for message in messages {
-            match message.body {
-                MessageContent::SignedPacket { pk: _, public_payload, masked_payload: _ } => {
-                    println!("Notification: {}", String::from_utf8(public_payload.0).unwrap());
-                },
-                _ => {}
-            }
+    for message in recipient.fetch_next_msgs().await {
+        match message.body {
+            MessageContent::SignedPacket { pk: _, public_payload, masked_payload: _ } => {
+                println!("{}", String::from_utf8(public_payload.0).unwrap());
+            },
+            _ => {}
         }
     }
 }
