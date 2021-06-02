@@ -34,7 +34,9 @@ async fn main() {
     let input = std::io::stdin();
     for line in input.lock().lines() {
         let notification = line.expect("Unable to read notification");
+
+        println!("Sending the notification");
         notifications::send(&mut author, &application_instance, &announcement_id, &notification).await;
-        println!("Send a notification:");
+        println!("Send another notification:");
     }
 }
