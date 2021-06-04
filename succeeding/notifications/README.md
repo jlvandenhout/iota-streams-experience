@@ -168,7 +168,7 @@ In this step, we write a function that permits the Publisher to publish notifica
 
 
 ## Step 4. Create the Publisher
-In this step, we will create the Publisher binary that uses the functions we just created to announce a Channel and send one or multiple notifications to it.
+In this step, we will create the Publisher binary that uses the functions we just created to announce a Channel and publish one or multiple notifications to it.
 
 1. In the `src` folder, create a subfolder named `bin`. Any modules in this folder will automatically be compiled to separate binaries by Cargo. In this folder create a file called `publisher.rs`.
 
