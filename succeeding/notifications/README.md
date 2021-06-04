@@ -254,7 +254,7 @@ In this step, we write some functions to allow Recipients to listen to the Chann
     }
     ```
 
-2. In the `lib.rs` file, create an implementation of the struct `Recipient`.
+2. In the `lib.rs` file, create an implementation block for the `Recipient` struct.
 
     ```rust
     impl Recipient {
