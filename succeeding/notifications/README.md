@@ -394,7 +394,7 @@ In this step, we will create the Recipient binary that uses the functions we jus
     ```
 
 ## Step 9. Run the scripts
-We now have an Publisher and a Recipient to create and consume our notification service. From the root of this package use the following commands to run the Publisher and the Recipient:
+We now have a Publisher and a Recipient to create and consume our notification service. From the root of this package use the following commands to run the Publisher and the Recipient:
 
 ```bash
 cargo run --bin author <SEED>
