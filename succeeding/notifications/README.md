@@ -343,7 +343,7 @@ In this step, we write a function that receives notifications from the Channel. 
 
 
 ## Step 7. Create the Recipient
-In this step, we will create the Recipient binary that uses the functions we just created to listen to a Channel and receive any notifications sent to it by the Publisher.
+In this step, we will create the Recipient binary that uses the functions we just created to listen to a Channel and receive any notifications published to it by the Publisher.
 
 1. In our `src/bin` folder create a file called `recipient.rs`.
 
