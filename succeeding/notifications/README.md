@@ -201,7 +201,7 @@ Using `std::io::BufRead` here enables certain functions for our command line inp
     }
     ```
 
-4. Create a Publisher by calling the "new" function of the "Publisher" struct contained in lib.rs file.
+4. Create a Publisher by calling the `new` function of the `Publisher` struct contained in lib.rs file.
 
     ```rust
         let mut publisher = notifications::Publisher::new(seed);
