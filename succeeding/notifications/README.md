@@ -322,7 +322,7 @@ In this step, we write a function that receives notifications from the Channel. 
     ```
 
 
-2. Fetch continuosly if there are any messages pending for our Recipient.
+2. Fetch any pending messages for our Recipient.
 
     ```rust
             for message in self.inner.fetch_next_msgs().await {
