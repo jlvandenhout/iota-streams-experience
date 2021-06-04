@@ -1,5 +1,5 @@
 # Notifications
-**This tutorial guides us through the process of building a notification service to notify Recipients using the Streams Channels protocol and the Tangle. At the end of the tutorial we will have an Author, capable of announcing a Channel and sending notifications, and a Recipient, capable of listening to a Channel and receiving notifications.**
+**This tutorial guides us through the process of building a notification service to notify Recipients using the Streams Channels protocol and the Tangle. At the end of the tutorial we will have a Publisher, capable of announcing a Channel and publishing notifications to it, and one or more Recipients, capable of receiving notifications published to the Channel by the Publisher.**
 
 >This tutorial is based on the [original Channel tutorial](https://docs.iota.org/docs/channels/1.3/tutorials/build-a-messaging-app), but tailored to Streams 1.0 and IOTA 1.5 (Chrysalis) and providing a solution to some issues the community had using this tutorial.
 
@@ -20,7 +20,7 @@ If you're new to Rust, or don't understand something in the code, the following 
 ## Step 1. Create our project
 The best way to start a new project is to use the [Cargo](https://doc.rust-lang.org/book/ch01-03-hello-cargo.html) build tool, because it handles a lot of tasks for us such as building our code and downloading and building its dependencies.
 
-In this step, we use Cargo to create a new project and list the dependencies. We will create a library project as a base for our Author and Recipient binaries, which we will create later.
+In this step, we use Cargo to create a new project and list the dependencies. We will create a library project as a base for our Publisher and Recipient binaries, which we will create later.
 
 1. Use Cargo to create a new library project. You can replace `notifications` with your own project name if you want.
 
@@ -44,255 +44,306 @@ In this step, we use Cargo to create a new project and list the dependencies. We
 3. In `lib.rs` list all the functionality we will be using in the following steps.
 
     ```rust
-    use iota_streams::app_channels::api::tangle::{
-        Author,
-        Address,
-        Bytes,
-        Subscriber,
-        Transport,
-        MessageContent,
+    use iota_streams::{
+        app::transport::tangle::{
+            client::Client,
+            PAYLOAD_BYTES,
+        },
+        app_channels::api::tangle::{
+            Author,
+            Address,
+            Bytes,
+            Subscriber,
+            MessageContent,
+        },
     };
     ```
 
-Now we have all the dependencies and functionality listed, we're ready to start coding. Our project should now look like this:
+    Now we have all the dependencies and functionality listed, we're ready to start coding. Our project should now look like this:
 
-```
-src/
-    lib.rs
-Cargo.toml
-```
+    ```
+    src/
+        lib.rs
+    Cargo.toml
+    ```
 
 
-## Step 2. Announce the Channel
-In this step, we write a function that announces a new Channel, which Recipients can listen to to receive notifications sent by the Author.
+## Step 2. Announce the Channel 
+In this step, we write some functions in the `lib.rs` file for announcing a new Channel which Recipients can listen to in order to receive notifications published to the Channel by the Publisher.
 
-1. In the `lib.rs` file, create a function called `announce`.
+1. In the `lib.rs` file, create a struct called `Publisher` that encapsulates the `Author` interface. We will use this to build the functions we want our Publisher to expose.
 
     ```rust
-    /// Announce the Channel and return the Application Instance and Message ID to
-    /// share with Recipients, so they can listen to the Channel.
-    pub async fn announce<T: Transport>(author: &mut Author<T>) -> (String, String) {
+    pub struct Publisher {
+        inner: Author<Client>,
+    }
+    ```
+
+2. In the `lib.rs` file, create an implementation block for the `Publisher` struct.
+
+    ```rust
+    impl Publisher {
 
     }
     ```
 
-2. Announce the Channel.
+3. In the implementation block provide a way to create a new Publisher from a provided seed and connect it to the IOTA Testnet through a public node.
 
     ```rust
-        let announcement_link = author
-            .send_announce()
-            .await
-            .expect("Failed to announce the Channel");
-
-        println!("Announced the Channel");
+        pub fn new(seed: &String) -> Self {
+            Self {
+                inner: Author::new(
+                    seed,
+                    "utf-8",
+                    PAYLOAD_BYTES,
+                    false,
+                    Client::new_from_url("https://api.lb-0.testnet.chrysalis2.com")
+                )
+            }
+        }
     ```
 
-3. Return the Application Instance and Message ID to share with the Recipients.
+4. Create a function to announce the Channel and return the Application Instance and Message ID to share with Recipients, so they can listen to the Channel.
 
     ```rust
-        (announcement_link.appinst.to_string(), announcement_link.msgid.to_string())
+        /// Announce the Channel and return the Application Instance and Message ID to
+        /// share with Recipients, so they can listen to the Channel.
+        pub async fn announce(&mut self) -> (String, String) {
+            let link = self.inner
+                .send_announce()
+                .await
+                .expect("Failed to announce the Channel");
+
+            (link.appinst.to_string(), link.msgid.to_string())
+        }
     ```
 
-    As an Author, we must send these Link details to any Recipient who wants to receive our notifications. This can be done by any means. In this tutorial, we'll do this by passing them to the Recipient via command line arguments.
+    As a Publisher, we must send these Link details (Application Instance and Message ID) to any Recipient who wants to receive our notifications. This can be done by any means. In this tutorial, we'll do this by passing them to the Recipient via command line arguments.
 
 
-## Step 3. Send a notification
-In this step, we write a function that sends a notification to the Channel. The message will be signed and public to allow all Recipients to read it and verify that it was the Author who sent it.
+## Step 3. Publish notifications
+In this step, we write a function that permits the Publisher to publish notification messages to the Channel. The message will be signed and public to allow all Recipients to read it and verify that it was the Publisher who sent it.
 
-1. Create a function called `send` that takes the Link details and the notification to send.
+1. In the implementation block of the Publisher create a function called `publish` that takes the Link details and the notification to publish.
 
     ```rust
-    /// Send a notification to the Channel. This notification message is linked to
-    /// the announcement message, so Recipients are able to find it.
-    pub async fn send<T: Transport>(
-        author: &mut Author<T>,
-        application_instance: &String,
-        announcement_id: &String,
-        notification: &String,
-    ) {
+        /// Publish a notification to the Channel. This notification message is linked to
+        /// a previous message, so Recipients are able to find it.
+        pub async fn publish(
+            &mut self,
+            application_instance: &String,
+            message_id: &String,
+            notification: &String,
+        ) -> String {
 
-    }
+        }
     ```
 
-2. Convert the Application Instance and Message ID to a Link to link the notification message to.
+2. In the `publish` function convert the Application Instance and Message ID to a Link to link the notification message to.
 
     ```rust
-        let announcement_link = Address::from_str(&application_instance,&announcement_id)
-            .expect("Failed to create the Announcement Link");
+            let link = Address::from_str(application_instance,message_id)
+                .expect("Failed to create the Link");
     ```
 
 3. Convert the notification to bytes, as that is the only thing the Streams protocol cares about.
 
     ```rust
-        let public_payload = Bytes(notification.as_bytes().to_vec());
-        let masked_payload = Bytes("".as_bytes().to_vec());
+            let public_payload = Bytes(notification.as_bytes().to_vec());
+            let masked_payload = Bytes("".as_bytes().to_vec());
     ```
 
     In this case we only use the public payload. The masked payload is used when we only want certain Recipients to be able to read the data. For that to work, we would first need to send a Keyload message.
 
-4. Send the message, signed by the Author, using the Link and the payloads.
+4. Send the message, signed by the Publisher, using the Link and the payloads and return the Message ID of the sent message so we can link to it later.
 
     ```rust
-        author
-            .send_signed_packet(&announcement_link, &public_payload, &masked_payload)
-            .await
-            .expect("Failed to send the notification to the Channel");
+            let (link, _) = self.inner
+                .send_signed_packet(&link, &public_payload, &masked_payload)
+                .await
+                .expect("Failed to publish the notification to the Channel");
 
-        println!("Sent the notification to the Channel");
+            link.msgid.to_string()
     ```
 
 
-## Step 4. Create the Author
-In this step, we will create the Author binary that uses the functions we just created to announce a Channel and send a notification to it.
+## Step 4. Create the Publisher
+In this step, we will create the Publisher binary that uses the functions we just created to announce a Channel and publish one or multiple notifications to it.
 
-1. In the `src` folder, create a subfolder named `bin`. Any modules in this folder will automatically be compiled to separate binaries by Cargo. In this folder create a file called `author.rs`.
+1. In the `src` folder, create a subfolder named `bin`. Any modules in this folder will automatically be compiled to separate binaries by Cargo. In this folder create a file called `publisher.rs`.
 
     Our project should now look like this:
 
     ```
     src/
         bin/
-            author.rs
+            publisher.rs
         lib.rs
     Cargo.toml
     ```
 
-2. In `author.rs`, list the functionality we will be using.
+2. In `publisher.rs`, list the functionality we will be using.
 
     ```rust
-    use iota_streams::{
-        app::transport::tangle::{
-            PAYLOAD_BYTES,
-            client::Client,
-        },
-        app_channels::api::tangle::Author
-    };
+    use std::io::BufRead;
     ```
 
-3. Create an asynchronous main function using `tokio` and grab the Author Seed from the command line.
+Using `std::io::BufRead` here enables certain functions for our command line input that we will use later. This is called a Trait in Rust and you can read more about it [here](https://doc.rust-lang.org/stable/book/ch10-02-traits.html).
+3. Create an asynchronous main function using `tokio` and grab the seed from the command line.
 
     ```rust
     #[tokio::main]
     async fn main() {
         // Get the Seed from the command line
         let args : Vec<String> = std::env::args().collect();
-        let seed = args[1].as_str();
+        let seed = &args[1];
 
     }
     ```
 
-4. Create an Author using an IOTA Client.
+4. Create a Publisher by calling the `new` function of the `Publisher` struct contained in lib.rs file.
 
     ```rust
-        // Connect to an IOTA Node
-        let client = Client::new_from_url("https://api.lb-0.testnet.chrysalis2.com");
-
-        // Create the Author
-        let encoding = "utf-8";
-        let multi_branching = true;
-        let mut author = Author::new(seed, encoding, PAYLOAD_BYTES, multi_branching, client);
+        let mut publisher = notifications::Publisher::new(seed);
     ```
 
     As the Seed is the key to our Channel, it should always be kept a secret.
 
-5. Now we are ready to announce the Channel and send a notification using our library functions.
+5. Now we that we have a Publisher, we are ready to announce the Channel 
 
     ```rust
         // Announce the Channel and get the Channel Address and Announcement Message ID
-        let (application_instance, announcement_id) = notifications::announce(&mut author).await;
+        let (application_instance, mut message_id) = publisher.announce().await;
 
-        // Send the notification
-        let notification = "NOTIFICATION".to_string();
-        notifications::send(&mut author, &application_instance, &announcement_id, &notification).await;
     ```
 
-6. For our convenience, let's print the command to run the Recipient to the console:
+6. We now print the command that each Recipient will have to execute in order to listen to the Channel the Publisher just created.
+NOTE: In a real scenario the Publisher must find an efficient and safe way to communicate the Channel Address and Announcement Message ID to each Recipient who intends to listen to the Channel created by the Publisher.
 
     ```rust
         // Share the Channel Address and Announcement Message ID with the Recipient
-        println!("Now use the Recipient to listen to the Channel and receive the notification, by running:");
-        println!("cargo run --bin recipient <SEED> {} {}", application_instance, announcement_id);
+        println!("Now open another terminal and run:");
+        println!("cargo run --bin recipient {} {} <RANDOM_SEED>", application_instance, message_id);
+        println!("Send a notification:");
     ```
 
-Now that the Author has announced the Channel, shared the Link details and sent a notification, let's code the functionality for our Recipient to listen to the Channel and receive the notification.
+6. Now that the Publisher has announced the Channel, let's provide a way to publish notifications from the command line to the Channel.
+
+    ```rust
+        // Send notifications
+        for line in std::io::stdin().lock().lines() {
+            let notification = line.expect("Unable to read the notification");
+
+            message_id = publisher.publish(&application_instance, &message_id, &notification).await;
+            println!("Send another notification:");
+        }
+    ```
+
+Now that the Publisher has announced the Channel, shared the Link details and is able to publish one or more notifications, let's implement the functionality for our Recipient to listen to the Channel and receive the notifications.
 
 
 ## Step 5. Listen to the Channel
-In this step, we write a function that lets the Recipient listen to the Channel, using the Application Instance and Message ID.
+In this step, we write some functions to allow Recipients to listen to the Channel and receive notifications, using the Application Instance and Message ID.
 
-1. In the `lib.rs` file, create a function called `listen`.
+
+1. In the `lib.rs` file, create a struct called `Recipient` that encapsulates the `Subscriber` interface. Like with the Publisher we will use this to build the functions we want our Recipient to expose.
 
     ```rust
-    /// Listen to a Channel using the Application Instance and Message ID
-    /// shared by the Author.
-    pub async fn listen<T: Transport>(
-        recipient: &mut Subscriber<T>,
-        application_instance: &String,
-        announcement_id: &String,
-    ) {
+    pub struct Recipient {
+        inner: Subscriber<Client>,
+    }
+    ```
+
+2. In the `lib.rs` file, create an implementation block for the `Recipient` struct.
+
+    ```rust
+    impl Recipient {
 
     }
     ```
 
-2. Convert the Application Instance and Message ID to a Link to listen to.
+3. In the implementation block provide a way to create a new Recipient from a provided seed and connect it to the IOTA Testnet through a public node.
 
     ```rust
-        let announcement_link = Address::from_str(&application_instance,&announcement_id)
-            .expect("Failed to create the Announcement Link");
+        pub fn new(seed: &String) -> Self {
+            Self {
+                inner: Subscriber::new(
+                    seed,
+                    "utf-8",
+                    PAYLOAD_BYTES,
+                    false,
+                    Client::new_from_url("https://api.lb-0.testnet.chrysalis2.com"),
+                )
+            }
+        }
     ```
 
-2. Listen to the Channel.
+4. Create a function to listen to a Channel using the Application Instance and Message ID shared by the Publisher.
 
     ```rust
-        recipient
-            .receive_announcement(&announcement_link)
-            .await
-            .expect("Failed to listen to the Channel");
+        /// Listen to a Channel using the Application Instance and Message ID
+        /// shared by the Publisher.
+        pub async fn listen(
+            &mut self,
+            application_instance: &String,
+            announcement_id: &String,
+        ) {
 
-        println!("Listening to the Channel");
+        }
+    ```
+
+5. Convert the Application Instance and Message ID to a Link to listen to.
+
+    ```rust
+            let announcement_link = Address::from_str(&application_instance,&announcement_id)
+                .expect("Failed to create the Link");
+    ```
+
+6. Listen to the Channel.
+
+    ```rust
+            self.inner
+                .receive_announcement(&announcement_link)
+                .await
+                .expect("Failed to listen to the Channel");
     ```
 
 
-## Step 6. Receive a notification
-In this step, we write a function that receives a notification from the Channel. The message will be verified and converted from bytes to plain text.
+## Step 6. Receive notifications
+In this step, we write a function that receives notifications from the Channel. The messages will be verified and converted from bytes to plain text.
 
-1. Create a function called `receive`.
+1. In the implementation block of the Recipient create a function called `receive`.
 
     ```rust
-    /// Receive any notifications sent by the Author to the Channel.
-    pub async fn receive<T: Transport>(recipient: &mut Subscriber<T>) {
-
-    }
+        /// Receive any notifications sent by the Publisher to the Channel.
+        pub async fn receive(&mut self) {
+            
+        }
     ```
 
-2. Fetch any messages pending for our Recipient.
+
+2. Fetch any pending messages for our Recipient.
 
     ```rust
-        let messages = recipient.fetch_next_msgs().await;
+            for message in self.inner.fetch_next_msgs().await {
+                
+            }
     ```
 
 3. Check if any messages are received and, if so, convert the public payload to plain text and print.
 
     ```rust
-        if messages.is_empty() {
-            println!("No notifications");
-        } else {
-            for message in messages {
-                match message.body {
-                    MessageContent::SignedPacket { pk: _, public_payload, masked_payload: _ } => {
-                        println!("Notification: {}", String::from_utf8(public_payload.0).unwrap());
-                    },
-                    _ => {}
+                if let MessageContent::SignedPacket { pk: _, public_payload, masked_payload: _ } = message.body {
+                    println!("{}", String::from_utf8(public_payload.0).unwrap());
                 }
-            }
-        }
     ```
 
     Note that we are only interested in the Signed Packet messages for now. There are other messages types we could listen to, like Keyload messages.
 
 
+
 ## Step 7. Create the Recipient
-In this step, we will create the Recipient binary that uses the functions we just created to listen to a Channel and receive any notifications sent to it by the Author.
+In this step, we will create the Recipient binary that uses the functions we just created to listen to a Channel and receive any notifications published to it by the Publisher.
 
 1. In our `src/bin` folder create a file called `recipient.rs`.
 
@@ -301,63 +352,49 @@ In this step, we will create the Recipient binary that uses the functions we jus
     ```
     src/
         bin/
-            author.rs
+            publisher.rs
             recipient.rs
         lib.rs
     Cargo.toml
     ```
 
-2. In `recipient.rs`, list the functionality we will be using.
-
-    ```rust
-    use iota_streams::{
-        app::transport::tangle::{
-            PAYLOAD_BYTES,
-            client::Client,
-        },
-        app_channels::api::tangle::Subscriber
-    };
-    ```
-
-3. Create an asynchronous main function using `tokio` and grab the Recipient Seed, Application Instance and Message ID from the command line.
+2. Create an asynchronous main function using `tokio` and grab the Application Instance, Announcement ID and Recipient seed from the command line.
 
     ```rust
     #[tokio::main]
     async fn main() {
         // Get the Seed, Channel Address and Announcement Message ID from the command line
         let args : Vec<String> = std::env::args().collect();
-        let seed = args[1].as_str();
-        let application_instance = &args[2];
-        let announcement_id = &args[3];
+        let application_instance = &args[1];
+        let announcement_id = &args[2];
+        let seed = &args[3];
 
     }
     ```
 
-4. Create a Recipient using an IOTA Client.
+3. Create a Recipient by calling the `new` function of the `Recipient` struct contained in lib.rs file.
 
     ```rust
-        // Connect to an IOTA Node
-        let client = Client::new_from_url("https://api.lb-0.testnet.chrysalis2.com");
+        let mut recipient = notifications::Recipient::new(seed);
 
-        // Create the Recipient
-        let encoding = "utf-8";
-        let mut recipient = Subscriber::new(seed, encoding, PAYLOAD_BYTES, client);
     ```
 
-    As with the Seed of the Author, the Seed of the Recipient should be kept secret.
-
-5. Now we are ready to listen to the Channel and receive notifications using our library functions.
+4. Now we are ready to listen the Channel. To not overload our IOTA Client, let's query for pending notifications with an interval of a second.
 
     ```rust
         // Listen to the Channel using the Channel Address and Announcement Message ID
-        notifications::listen(&mut recipient, application_instance, announcement_id).await;
+        recipient.listen(application_instance, announcement_id).await;
 
         // Receive notifications from the Channel
-        notifications::receive(&mut recipient).await;
+        let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(1));
+        loop {
+            interval.tick().await;
+            recipient.receive().await;
+        }
     ```
 
-
-We now have an Author and a Recipient to create and consume our notification service. From the root of this package use the following commands to run the Author and the Recipient:
+## Step 9. Run the scripts
+We now have a Publisher and a Recipient to create and consume our notification service. From the root of this package use the following commands to run the Publisher and the Recipient:
 
 ```bash
 cargo run --bin author <SEED>
