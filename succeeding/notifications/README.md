@@ -218,7 +218,7 @@ Using `std::io::BufRead` here enables certain functions for our command line inp
     ```
 
 6. We now print the command that each Recipient will have to execute in order to listen to the Channel the Publisher just created.
-NOTE: In a real scenario the Publisher must find an efficient and safe way to communicate Channel Address and Announcement Message ID to each recipient who intends to subscribe to the channel created by the Publisher.
+NOTE: In a real scenario the Publisher must find an efficient and safe way to communicate the Channel Address and Announcement Message ID to each Recipient who intends to listen to the Channel created by the Publisher.
 
     ```rust
         // Share the Channel Address and Announcement Message ID with the Recipient
