@@ -312,7 +312,7 @@ In this step, we write some functions to allow Recipients to listen to the Chann
 ## Step 6. Receive notifications
 In this step, we write a function that receives notifications from the Channel. The messages will be verified and converted from bytes to plain text.
 
-1. Still in the implementation of the Recipient create a function called `receive`.
+1. In the implementation block of the Recipient create a function called `receive`.
 
     ```rust
         /// Receive any notifications sent by the Publisher to the Channel.
