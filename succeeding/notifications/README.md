@@ -239,7 +239,7 @@ NOTE: In a real scenario the Publisher must find an efficient and safe way to co
         }
     ```
 
-Now that the Publisher has announced the Channel, shared the Link details and sent one or more notifications, let's code the functionality for our Recipient to listen to the Channel and receive the notification.
+Now that the Publisher has announced the Channel, shared the Link details and is able to publish one or more notifications, let's implement the functionality for our Recipient to listen to the Channel and receive the notifications.
 
 
 ## Step 5. Listen to the Channel
