@@ -87,7 +87,7 @@ In this step, we write some functions in the `lib.rs` file for announcing a new 
     }
     ```
 
-3. In the implementation create a new Publisher starting from the seed chosen from him and by connecting to the IOTA test network through a public node.
+3. In the implementation block provide a way to create a new Publisher from a provided seed and connect it to the IOTA Testnet through a public node.
 
     ```rust
         pub fn new(seed: &String) -> Self {
