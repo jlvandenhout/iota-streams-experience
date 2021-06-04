@@ -103,7 +103,7 @@ In this step, we write some functions in the `lib.rs` file for announcing a new 
         }
     ```
 
-4. Still in the implementation of the Publisher create a function called `announce` that announce the Channel and return the Application Instance and Message ID to share with Recipients, so they can listen to the Channel.
+4. Create a function to announce the Channel and return the Application Instance and Message ID to share with Recipients, so they can listen to the Channel.
 
     ```rust
         /// Announce the Channel and return the Application Instance and Message ID to
