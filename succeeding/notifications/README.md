@@ -124,7 +124,7 @@ In this step, we write some functions in the `lib.rs` file for announcing a new 
 ## Step 3. Publish notifications
 In this step, we write a function that permits the Publisher to publish notification messages to the Channel. The message will be signed and public to allow all Recipients to read it and verify that it was the Publisher who sent it.
 
-1. Still in the implementation of the Publisher create a function called `publish` that takes the Link details and the notification to send.
+1. In the implementation block of the Publisher create a function called `publish` that takes the Link details and the notification to publish.
 
     ```rust
         /// Publish a notification to the Channel. This notification message is linked to
