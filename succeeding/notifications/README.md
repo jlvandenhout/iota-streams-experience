@@ -79,7 +79,7 @@ In this step, we write some functions in the `lib.rs` file for announcing a new 
     }
     ```
 
-2. In the `lib.rs` file, create an implementations of the struct `Publisher`.
+2. In the `lib.rs` file, create an implementation block for the `Publisher` struct.
 
     ```rust
     impl Publisher {
