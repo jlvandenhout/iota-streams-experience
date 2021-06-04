@@ -372,7 +372,7 @@ In this step, we will create the Recipient binary that uses the functions we jus
     }
     ```
 
-3. Create a Recipient by calling the "new" function of the "Recipient" struct contained in lib.rs file.
+3. Create a Recipient by calling the `new` function of the `Recipient` struct contained in lib.rs file.
 
     ```rust
         let mut recipient = notifications::Recipient::new(seed);
