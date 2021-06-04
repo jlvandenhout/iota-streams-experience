@@ -121,7 +121,7 @@ In this step, we write some functions in the `lib.rs` file for announcing a new 
     As a Publisher, we must send these Link details (Application Instance and Message ID) to any Recipient who wants to receive our notifications. This can be done by any means. In this tutorial, we'll do this by passing them to the Recipient via command line arguments.
 
 
-## Step 3. Send notifications
+## Step 3. Publish notifications
 In this step, we write a function that permits the Publisher to publish notification messages to the Channel. The message will be signed and public to allow all Recipients to read it and verify that it was the Publisher who sent it.
 
 1. Still in the implementation of the Publisher create a function called `publish` that takes the Link details and the notification to send.
