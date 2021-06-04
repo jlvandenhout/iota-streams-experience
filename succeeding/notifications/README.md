@@ -243,7 +243,7 @@ Now that the Publisher has announced the Channel, shared the Link details and is
 
 
 ## Step 5. Listen to the Channel
-In this step, we write some functions that lets the Recipient listen to the Channel and so receiving notifications, using the Application Instance and Message ID.
+In this step, we write some functions to allow Recipients to listen to the Channel and receive notifications, using the Application Instance and Message ID.
 
 
 1. In the `lib.rs` file, create a scruct called `Recipient` that inherits from `Subscriber`
