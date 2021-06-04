@@ -1,6 +1,6 @@
 #[tokio::main]
 async fn main() {
-    // Get the Seed, Channel Address and Announcement Message ID from the command line
+    // Get the Seed, Application Instance and Announcement Message ID from the command line
     let args : Vec<String> = std::env::args().collect();
     let application_instance = &args[1];
     let announcement_id = &args[2];
@@ -8,7 +8,7 @@ async fn main() {
 
     let mut recipient = notifications::Recipient::new(seed);
 
-    // Listen to the Channel using the Channel Address and Announcement Message ID
+    // Listen to the Channel using the Application Instance and Announcement Message ID
     recipient.listen(application_instance, announcement_id).await;
 
     // Receive notifications from the Channel

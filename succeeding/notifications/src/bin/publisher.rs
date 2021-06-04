@@ -9,10 +9,10 @@ async fn main() {
 
     let mut publisher = notifications::Publisher::new(seed);
 
-    // Announce the Channel and get the Channel Address and Announcement Message ID
+    // Announce the Channel and get the Application Instance and Announcement Message ID
     let (application_instance, mut message_id) = publisher.announce().await;
 
-    // Share the Channel Address and Announcement Message ID with the Recipient
+    // Share the Application Instance and Announcement Message ID with the Recipient
     println!("Now open another terminal and run:");
     println!("cargo run --bin recipient {} {} <RANDOM_SEED>", application_instance, message_id);
     println!("Send a notification:");
