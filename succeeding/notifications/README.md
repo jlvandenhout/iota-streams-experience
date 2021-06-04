@@ -262,7 +262,7 @@ In this step, we write some functions to allow Recipients to listen to the Chann
     }
     ```
 
-3. In the implementation create a Recipient starting from a seed chosen from him and by connecting to the IOTA test network through a public node .
+3. In the implementation block provide a way to create a new Recipient from a provided seed and connect it to the IOTA Testnet through a public node.
 
     ```rust
         pub fn new(seed: &String) -> Self {
