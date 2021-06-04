@@ -188,6 +188,7 @@ In this step, we will create the Publisher binary that uses the functions we jus
     use std::io::BufRead;
     ```
 
+Using `std::io::BufRead` here enables certain functions for our command line input that we will use later. This is called a Trait in Rust and you can read more about it [here](https://doc.rust-lang.org/stable/book/ch10-02-traits.html).
 3. Create an asynchronous main function using `tokio` and grab the seed from the command line.
 
     ```rust
