@@ -379,7 +379,7 @@ In this step, we will create the Recipient binary that uses the functions we jus
 
     ```
 
-4. Now we are ready to listen the Channel 
+4. Now we are ready to listen the Channel. To not overload our IOTA Client, let's query for pending notifications with an interval of a second.
 
     ```rust
         // Listen to the Channel using the Channel Address and Announcement Message ID
