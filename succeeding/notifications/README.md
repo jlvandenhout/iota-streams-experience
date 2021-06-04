@@ -155,7 +155,7 @@ In this step, we write a function that permits the Publisher to publish notifica
 
     In this case we only use the public payload. The masked payload is used when we only want certain Recipients to be able to read the data. For that to work, we would first need to send a Keyload message.
 
-4. Send the message, signed by the Publisher, using the Link and the payloads.
+4. Send the message, signed by the Publisher, using the Link and the payloads and return the Message ID of the sent message so we can link to it later.
 
     ```rust
             let (link, _) = self.inner
