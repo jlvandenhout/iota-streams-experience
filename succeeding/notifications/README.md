@@ -227,7 +227,7 @@ NOTE: In a real scenario the Publisher must find an efficient and safe way to co
         println!("Send a notification:");
     ```
 
-6. Now that the Publisher has announced the Channel he can begin to publish notifications on this channel
+6. Now that the Publisher has announced the Channel, let's provide a way to publish notifications from the command line to the Channel.
 
     ```rust
         // Send notifications
