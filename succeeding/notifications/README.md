@@ -278,7 +278,7 @@ In this step, we write some functions to allow Recipients to listen to the Chann
         }
     ```
 
-4. Create a function that listen to a Channel using the Application Instance and Message ID shared by the Publisher.
+4. Create a function to listen to a Channel using the Application Instance and Message ID shared by the Publisher.
 
     ```rust
         /// Listen to a Channel using the Application Instance and Message ID
