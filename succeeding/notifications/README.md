@@ -358,7 +358,7 @@ In this step, we will create the Recipient binary that uses the functions we jus
     Cargo.toml
     ```
 
-2. Create an asynchronous main function using `tokio` and grab respectively Application Instance, Announcement ID and recipient-seed from the command line.
+2. Create an asynchronous main function using `tokio` and grab the Application Instance, Announcement ID and Recipient seed from the command line.
 
     ```rust
     #[tokio::main]
