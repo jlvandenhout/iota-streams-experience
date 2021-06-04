@@ -69,7 +69,7 @@ In this step, we use Cargo to create a new project and list the dependencies. We
 
 
 ## Step 2. Announce the Channel 
-In this step, we write some functions in the `lib.rs` file for announcing a new Channel which Recipients can listen to in order to receive notifications sent to the channel by the Publisher.
+In this step, we write some functions in the `lib.rs` file for announcing a new Channel which Recipients can listen to in order to receive notifications published to the Channel by the Publisher.
 
 1. In the `lib.rs` file, create a struct called `Publisher` that inherits from `Author`
 
